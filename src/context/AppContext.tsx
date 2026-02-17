@@ -383,11 +383,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           prev.map((task) =>
             task.id === taskId
               ? {
-                  ...task,
-                  subtasks: (task.subtasks ?? []).filter(
-                    (item) => item.id !== tempId,
-                  ),
-                }
+                ...task,
+                subtasks: (task.subtasks ?? []).filter(
+                  (item) => item.id !== tempId,
+                ),
+              }
               : task,
           ),
         );
@@ -406,11 +406,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           prev.map((task) =>
             task.id === taskId
               ? {
-                  ...task,
-                  subtasks: (task.subtasks ?? []).map((item) =>
-                    item.id === tempId ? enriched : item,
-                  ),
-                }
+                ...task,
+                subtasks: (task.subtasks ?? []).map((item) =>
+                  item.id === tempId ? enriched : item,
+                ),
+              }
               : task,
           ),
         );
@@ -516,10 +516,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             if (item.id !== id) return item;
             const nextSubtasks = item.subtasks
               ? item.subtasks.map((subtask) =>
-                  cascaded.includes(subtask.id)
-                    ? { ...subtask, isCompleted: false }
-                    : subtask,
-                )
+                cascaded.includes(subtask.id)
+                  ? { ...subtask, isCompleted: false }
+                  : subtask,
+              )
               : item.subtasks;
             return {
               ...item,
@@ -590,10 +590,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         cascadedRef.current[taskId] = affected;
         const nextSubtasks = task.subtasks
           ? task.subtasks.map((subtask) =>
-              affected.includes(subtask.id)
-                ? { ...subtask, isCompleted: true, completedAt: new Date().toISOString() }
-                : subtask,
-            )
+            affected.includes(subtask.id)
+              ? { ...subtask, isCompleted: true, completedAt: new Date().toISOString() }
+              : subtask,
+          )
           : task.subtasks;
         const completedAt = new Date().toISOString();
         const nextTasks = tasks.map((item) => {
@@ -671,10 +671,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         const nextSubtasks = task.subtasks.map((child) =>
           child.id === subtaskId
             ? {
-                ...child,
-                isCompleted: !child.isCompleted,
-                completedAt: child.isCompleted ? undefined : completedAt,
-              }
+              ...child,
+              isCompleted: !child.isCompleted,
+              completedAt: child.isCompleted ? undefined : completedAt,
+            }
             : child,
         );
         const nextTasks = tasks.map((item) => {
@@ -706,6 +706,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const parent = tasks.find((item) => item.id === taskId);
       const subtask = parent?.subtasks?.find((child) => child.id === subtaskId);
       if (!subtask) return;
+      if (!parent || !parent.subtasks) {
+        console.error("Parent task not found");
+        return;
+      }
       if (subtask.isCompleted) {
         const completedAt = null;
         const nextSubtasks = parent.subtasks.map((child) =>
