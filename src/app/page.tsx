@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -171,9 +171,8 @@ const TaskCard = ({
   };
   return (
     <Card
-      className={`flex flex-col gap-2 rounded-lg border bg-white p-3 text-sm shadow-sm ${
-        isOverlay ? "pointer-events-none w-64" : ""
-      }`}
+      className={`flex flex-col gap-2 rounded-lg border bg-white p-3 text-sm shadow-sm ${isOverlay ? "pointer-events-none w-64" : ""
+        }`}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-start gap-2">
@@ -184,9 +183,8 @@ const TaskCard = ({
             onPointerDown={(event) => event.stopPropagation()}
           />
           <span
-            className={`font-medium ${
-              task.isCompleted ? "text-zinc-400 line-through" : "text-zinc-900"
-            }`}
+            className={`font-medium ${task.isCompleted ? "text-zinc-400 line-through" : "text-zinc-900"
+              }`}
           >
             {task.title}
           </span>
@@ -268,38 +266,38 @@ const TaskCard = ({
           {task.subtasks
             .filter((subtask) => !hiddenSubtaskIds?.has(subtask.id))
             .map((subtask) => (
-            <div key={subtask.id} className="flex items-center gap-2">
-              <Checkbox
-                checked={subtask.isCompleted}
-                disabled={isOverlay}
-                onCheckedChange={() => onToggleSubtask?.(task.id, subtask.id)}
-                onPointerDown={(event) => event.stopPropagation()}
-              />
-              <span
-                className={
-                  subtask.isCompleted
-                    ? "text-zinc-400 line-through"
-                    : "text-zinc-700"
-                }
-              >
-                {subtask.title}
-              </span>
-              <input
-                type="number"
-                min={5}
-                value={subtask.estimatedTime}
-                disabled={isOverlay}
-                onChange={(event) =>
-                  onUpdateSubtaskTime?.(
-                    task.id,
-                    subtask.id,
-                    Number(event.target.value),
-                  )
-                }
-                onPointerDown={(event) => event.stopPropagation()}
-                className="ml-auto w-14 rounded border border-zinc-200 bg-white px-1 py-0.5 text-[11px] text-zinc-500"
-              />
-            </div>
+              <div key={subtask.id} className="flex items-center gap-2">
+                <Checkbox
+                  checked={subtask.isCompleted}
+                  disabled={isOverlay}
+                  onCheckedChange={() => onToggleSubtask?.(task.id, subtask.id)}
+                  onPointerDown={(event) => event.stopPropagation()}
+                />
+                <span
+                  className={
+                    subtask.isCompleted
+                      ? "text-zinc-400 line-through"
+                      : "text-zinc-700"
+                  }
+                >
+                  {subtask.title}
+                </span>
+                <input
+                  type="number"
+                  min={5}
+                  value={subtask.estimatedTime}
+                  disabled={isOverlay}
+                  onChange={(event) =>
+                    onUpdateSubtaskTime?.(
+                      task.id,
+                      subtask.id,
+                      Number(event.target.value),
+                    )
+                  }
+                  onPointerDown={(event) => event.stopPropagation()}
+                  className="ml-auto w-14 rounded border border-zinc-200 bg-white px-1 py-0.5 text-[11px] text-zinc-500"
+                />
+              </div>
             ))}
         </div>
       )}
@@ -447,9 +445,8 @@ const MicroTaskCard = ({
         onPointerDown={(event) => event.stopPropagation()}
       />
       <span
-        className={`flex-1 truncate text-left text-sm font-medium ${
-          task.isCompleted ? "text-zinc-400 line-through" : "text-zinc-900"
-        }`}
+        className={`flex-1 truncate text-left text-sm font-medium ${task.isCompleted ? "text-zinc-400 line-through" : "text-zinc-900"
+          }`}
       >
         {task.title}
       </span>
@@ -524,16 +521,15 @@ const DroppableCell = ({
   return (
     <div
       ref={setNodeRef}
-      className={`flex h-full flex-1 flex-col gap-2 border border-dashed border-zinc-200 p-4 transition-colors ${
-        isOver ? "border-zinc-900 bg-white" : tone
-      } ${className ?? ""}`}
+      className={`flex h-full flex-1 flex-col gap-2 border border-dashed border-zinc-200 p-4 transition-colors ${isOver ? "border-zinc-900 bg-white" : tone
+        } ${className ?? ""}`}
     >
       {children}
     </div>
   );
 };
 
-export default function Home() {
+function HomeContent() {
   const {
     tasks,
     setTasks,
@@ -785,10 +781,10 @@ export default function Home() {
           return prev.map((task) =>
             task.id === active.id
               ? {
-                  ...task,
-                  importanceLevel: target.level,
-                  isUrgent: target.isUrgent,
-                }
+                ...task,
+                importanceLevel: target.level,
+                isUrgent: target.isUrgent,
+              }
               : task,
           );
         }
@@ -805,10 +801,10 @@ export default function Home() {
         const updated = prev.map((task) =>
           task.id === active.id
             ? {
-                ...task,
-                importanceLevel: overTask.importanceLevel,
-                isUrgent: overTask.isUrgent,
-              }
+              ...task,
+              importanceLevel: overTask.importanceLevel,
+              isUrgent: overTask.isUrgent,
+            }
             : task,
         );
         void updateTask(activeTask.id, {
@@ -988,18 +984,17 @@ export default function Home() {
                   viewMode === "macro"
                     ? urgentMacroTasks.map((task) => task.id)
                     : orderedLeafTasks.orderMapByCell[urgentId] ??
-                      urgentMicroTasks.map((task) => task.id);
+                    urgentMicroTasks.map((task) => task.id);
                 const normalIds =
                   viewMode === "macro"
                     ? normalMacroTasks.map((task) => task.id)
                     : orderedLeafTasks.orderMapByCell[normalId] ??
-                      normalMicroTasks.map((task) => task.id);
+                    normalMicroTasks.map((task) => task.id);
                 return (
                   <div
                     key={row.level}
-                    className={`relative flex flex-1 ${
-                      index < importanceRows.length - 1 ? "border-b" : ""
-                    }`}
+                    className={`relative flex flex-1 ${index < importanceRows.length - 1 ? "border-b" : ""
+                      }`}
                   >
                     <div className="pointer-events-none absolute left-4 top-2 text-xs font-semibold text-zinc-500">
                       {row.label}
@@ -1016,41 +1011,41 @@ export default function Home() {
                         >
                           {viewMode === "macro"
                             ? urgentMacroTasks.map((task) => (
-                                <DraggableTask
-                                  key={task.id}
-                                  task={task}
-                                  onToggle={handleToggleTask}
-                                  onToggleSubtask={handleToggleSubtaskInline}
-                                  onUpdateTime={handleUpdateTaskTime}
-                                  onUpdateSubtaskTime={handleUpdateSubtaskTime}
-                                  enableSubtaskAdd
-                                  onAddSubtask={handleAddSubtask}
-                                  hiddenSubtaskIds={undefined}
+                              <DraggableTask
+                                key={task.id}
+                                task={task}
+                                onToggle={handleToggleTask}
+                                onToggleSubtask={handleToggleSubtaskInline}
+                                onUpdateTime={handleUpdateTaskTime}
+                                onUpdateSubtaskTime={handleUpdateSubtaskTime}
+                                enableSubtaskAdd
+                                onAddSubtask={handleAddSubtask}
+                                hiddenSubtaskIds={undefined}
                                 projects={projects}
-                                  onUpdateProject={handleUpdateTaskProject}
-                                />
-                              ))
+                                onUpdateProject={handleUpdateTaskProject}
+                              />
+                            ))
                             : urgentMicroTasks.map((task) => (
-                                <DraggableMicroTask
-                                  key={task.id}
-                                  task={task}
-                                  onToggle={() =>
-                                    task.parentId
-                                      ? handleToggleSubtask(task.parentId, task.id)
-                                      : handleToggleTask(task.id)
-                                  }
-                                  onUpdateTime={(minutes) =>
-                                    task.parentId
-                                      ? handleUpdateSubtaskTime(
-                                          task.parentId,
-                                          task.id,
-                                          minutes,
-                                        )
-                                      : handleUpdateTaskTime(task.id, minutes)
-                                  }
-                                  projects={projects}
-                                />
-                              ))}
+                              <DraggableMicroTask
+                                key={task.id}
+                                task={task}
+                                onToggle={() =>
+                                  task.parentId
+                                    ? handleToggleSubtask(task.parentId, task.id)
+                                    : handleToggleTask(task.id)
+                                }
+                                onUpdateTime={(minutes) =>
+                                  task.parentId
+                                    ? handleUpdateSubtaskTime(
+                                      task.parentId,
+                                      task.id,
+                                      minutes,
+                                    )
+                                    : handleUpdateTaskTime(task.id, minutes)
+                                }
+                                projects={projects}
+                              />
+                            ))}
                         </SortableContext>
                         {urgentItems.length === 0 && (
                           <p className="text-xs text-zinc-400">Drop tasks here</p>
@@ -1083,40 +1078,40 @@ export default function Home() {
                           {viewMode === "macro"
                             ? normalMacroTasks.map((task) => (
                               <DraggableTask
-                                  key={task.id}
-                                  task={task}
+                                key={task.id}
+                                task={task}
                                 onToggle={handleToggleTask}
-                                  onToggleSubtask={handleToggleSubtaskInline}
-                                  onUpdateTime={handleUpdateTaskTime}
-                                  onUpdateSubtaskTime={handleUpdateSubtaskTime}
-                                  enableSubtaskAdd
-                                  onAddSubtask={handleAddSubtask}
-                                  hiddenSubtaskIds={undefined}
+                                onToggleSubtask={handleToggleSubtaskInline}
+                                onUpdateTime={handleUpdateTaskTime}
+                                onUpdateSubtaskTime={handleUpdateSubtaskTime}
+                                enableSubtaskAdd
+                                onAddSubtask={handleAddSubtask}
+                                hiddenSubtaskIds={undefined}
                                 projects={projects}
                                 onUpdateProject={handleUpdateTaskProject}
-                                />
-                              ))
+                              />
+                            ))
                             : normalMicroTasks.map((task) => (
-                                <DraggableMicroTask
-                                  key={task.id}
-                                  task={task}
-                                  onToggle={() =>
-                                    task.parentId
-                                      ? handleToggleSubtask(task.parentId, task.id)
-                                      : handleToggleTask(task.id)
-                                  }
-                                  onUpdateTime={(minutes) =>
-                                    task.parentId
-                                      ? handleUpdateSubtaskTime(
-                                          task.parentId,
-                                          task.id,
-                                          minutes,
-                                        )
-                                      : handleUpdateTaskTime(task.id, minutes)
-                                  }
-                                  projects={projects}
-                                />
-                              ))}
+                              <DraggableMicroTask
+                                key={task.id}
+                                task={task}
+                                onToggle={() =>
+                                  task.parentId
+                                    ? handleToggleSubtask(task.parentId, task.id)
+                                    : handleToggleTask(task.id)
+                                }
+                                onUpdateTime={(minutes) =>
+                                  task.parentId
+                                    ? handleUpdateSubtaskTime(
+                                      task.parentId,
+                                      task.id,
+                                      minutes,
+                                    )
+                                    : handleUpdateTaskTime(task.id, minutes)
+                                }
+                                projects={projects}
+                              />
+                            ))}
                         </SortableContext>
                         {normalItems.length === 0 && (
                           <p className="text-xs text-zinc-400">Drop tasks here</p>
@@ -1153,8 +1148,8 @@ export default function Home() {
             {activeMicroTask ? (
               <MicroTaskCard
                 task={activeMicroTask}
-                onToggle={() => {}}
-                onUpdateTime={() => {}}
+                onToggle={() => { }}
+                onUpdateTime={() => { }}
                 projects={projects}
               />
             ) : null}
@@ -1203,11 +1198,10 @@ export default function Home() {
                     />
                     <div>
                       <p
-                        className={`font-medium ${
-                          task.isCompleted
-                            ? "text-zinc-400 line-through"
-                            : "text-zinc-800"
-                        }`}
+                        className={`font-medium ${task.isCompleted
+                          ? "text-zinc-400 line-through"
+                          : "text-zinc-800"
+                          }`}
                       >
                         {task.title}
                       </p>
@@ -1258,5 +1252,13 @@ export default function Home() {
       </aside>
 
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

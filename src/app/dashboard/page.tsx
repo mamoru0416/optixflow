@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -24,6 +24,12 @@ const dayKey = (date: Date) => date.toISOString().slice(0, 10);
 
 export default function DashboardPage() {
   const { tasks, projects } = useApp();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const totalTasks = tasks.length;
 
   const {
@@ -141,6 +147,8 @@ export default function DashboardPage() {
     });
   }, [tasks, projects]);
 
+  if (!mounted) return null;
+
   return (
     <div className="flex min-h-screen bg-zinc-100 font-sans text-zinc-900">
       <Sidebar />
@@ -190,7 +198,7 @@ export default function DashboardPage() {
               </p>
             </div>
             <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={activityData}>
                   <XAxis dataKey="label" stroke="#71717a" fontSize={12} />
                   <YAxis stroke="#71717a" fontSize={12} allowDecimals={false} />
@@ -221,7 +229,7 @@ export default function DashboardPage() {
               </p>
             </div>
             <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <PieChart>
                   <Pie
                     data={projectAllocation}
